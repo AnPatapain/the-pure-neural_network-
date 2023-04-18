@@ -195,7 +195,7 @@ def main():
 
     nn = NeuralNetwork(data_train, data_validation, n_input=len(data_train[0])-1, n_hidden=10, n_output=2)
     nn.print_network(is_trained=False)
-    nn.train(learning_rate=0.5, iterations=100)
+    nn.train(learning_rate=0.5, iterations=15000)
 
     print("FINISH TRAINING MODEL")
     nn.print_network(is_trained=True)
