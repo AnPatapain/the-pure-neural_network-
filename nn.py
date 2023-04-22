@@ -108,7 +108,7 @@ class Neurone:
         self.weights = weights
         self.input = None
         self.output = None
-        self.delta = None
+        self.gradient = None
 
 
 class Layer:
@@ -177,7 +177,7 @@ class NeuralNetwork:
             if i == len(self.layers) - 1:
                 for j in range(len(self.output_layer.neurones)):
                     error = self.output_layer.neurones[j].output - expected[j]
-                    self.output_layer.neurones[j].delta = error
+                    self.output_layer.neurones[j].gradient = error
 
 
             # layer is hidden layer
@@ -185,13 +185,13 @@ class NeuralNetwork:
                 for j in range(len(self.hidden_layer.neurones)):
                     error = 0.0
                     for neurone in self.output_layer.neurones:
-                        error += neurone.weights[j] * neurone.delta
+                        error += neurone.weights[j] * neurone.gradient
                         errors.append(error)
 
                 # Calculate delta for each neurone in layer
                 for j in range(len(self.hidden_layer.neurones)):
-                    self.hidden_layer.neurones[j].delta = errors[j] * \
-                                                          self.activation_derivative(
+                    self.hidden_layer.neurones[j].gradient = errors[j] * \
+                                                             self.activation_derivative(
                                                               self.hidden_layer.neurones[j].output)
 
     def update_weight(self, row, learning_rate):
@@ -207,9 +207,9 @@ class NeuralNetwork:
 
             for neurone in layer.neurones:
                 for j in range(len(inputs)):
-                    neurone.weights[j] -= learning_rate * neurone.delta * inputs[j]
+                    neurone.weights[j] -= learning_rate * neurone.gradient * inputs[j]
                 # update the bias
-                neurone.weights[-1] -= learning_rate * neurone.delta
+                neurone.weights[-1] -= learning_rate * neurone.gradient
 
     def train(self, learning_rate, iterations):
         """
@@ -289,11 +289,11 @@ class NeuralNetwork:
         print("--------------------------------- LE NEURAL NETWORK MODEL ----------------------------")
         print("hidden layer")
         for neuron in self.hidden_layer.neurones:
-            print('Neuron {', 'weight=', neuron.weights, 'output=', neuron.output, 'delta=', neuron.delta, '}')
+            print('Neuron {', 'weight=', neuron.weights, 'output=', neuron.output, 'delta=', neuron.gradient, '}')
 
         print("output layer")
         for neuron in self.output_layer.neurones:
-            print('Neuron {', 'weight=', neuron.weights, 'output=', neuron.output, 'delta=', neuron.delta, '}')
+            print('Neuron {', 'weight=', neuron.weights, 'output=', neuron.output, 'delta=', neuron.gradient, '}')
 
         print("-------------------------------------------------------------------------------------------------------")
 
